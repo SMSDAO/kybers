@@ -1,0 +1,41 @@
+{
+  "name": "kybers",
+  "version": "1.0.0",
+  "description": "Complete production-ready advanced DEX infrastructure with full smart contract suite, neo glow cyberpunk UI, and dynamic fee system",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "npm run build:contracts && npm run build:frontend && npm run build:services",
+    "build:contracts": "forge build",
+    "build:frontend": "cd frontend && npm run build",
+    "build:services": "cd services && npm run build",
+    "test": "npm run test:contracts && npm run test:frontend && npm run test:services",
+    "test:contracts": "forge test",
+    "test:coverage": "forge coverage",
+    "test:frontend": "cd frontend && npm run test",
+    "test:services": "cd services && npm run test",
+    "deploy:testnet": "bash scripts/deploy-contracts.sh testnet",
+    "deploy:mainnet": "bash scripts/deploy-contracts.sh mainnet",
+    "deploy:all": "bash scripts/deploy-all.sh",
+    "lint": "npm run lint:contracts && npm run lint:frontend",
+    "lint:contracts": "forge fmt --check",
+    "lint:frontend": "cd frontend && npm run lint",
+    "format": "forge fmt && cd frontend && npm run format",
+    "security:scan": "slither . && mythril analyze contracts/core/*.sol"
+  },
+  "keywords": [
+    "DEX",
+    "DeFi",
+    "Swap",
+    "Multi-chain",
+    "Aggregator",
+    "Ethereum",
+    "Base",
+    "Zora"
+  ],
+  "author": "gxqstudio.eth",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SMSDAO/kybers"
+  }
+}
