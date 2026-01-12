@@ -48,6 +48,8 @@ contract PriceAggregator is IPriceAggregator, Ownable {
         returns (uint256 bestPrice, address bestDex)
     {
         require(dexes.length > 0, "No DEXs registered");
+        require(tokenIn != address(0) && tokenOut != address(0), "Invalid token address");
+        require(tokenIn != tokenOut, "Same token");
 
         bestPrice = 0;
         bestDex = address(0);
@@ -65,7 +67,7 @@ contract PriceAggregator is IPriceAggregator, Ownable {
         }
 
         require(bestPrice > 0, "No valid price found");
-        emit PriceUpdate(tokenIn, tokenOut, bestPrice, bestDex);
+        // Note: Removed event emission from view function
     }
 
     /**

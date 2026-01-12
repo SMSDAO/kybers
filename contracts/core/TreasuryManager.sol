@@ -13,8 +13,11 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract TreasuryManager is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    address public constant TREASURY_ADDRESS = 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e; // gxqstudio.eth
+    address public treasuryAddress;
     uint256 public constant AUTO_FORWARD_THRESHOLD = 1 ether;
+
+    // Authorized callers (e.g., SwapRouter)
+    mapping(address => bool) public authorizedCallers;
 
     struct TokenBalance {
         uint256 accumulated;
@@ -29,13 +32,38 @@ contract TreasuryManager is Ownable, ReentrancyGuard {
     event FeesForwarded(address indexed token, uint256 amount, address indexed to);
     event EmergencyWithdraw(address indexed token, uint256 amount, address indexed to);
     event ThresholdReached(address indexed token, uint256 amount);
+    event TreasuryAddressUpdated(address indexed oldAddress, address indexed newAddress);
+    event AuthorizedCallerUpdated(address indexed caller, bool status);
 
-    constructor() Ownable(msg.sender) {}
+    constructor(address _treasuryAddress) Ownable(msg.sender) {
+        require(_treasuryAddress != address(0), "Invalid treasury address");
+        treasuryAddress = _treasuryAddress; // gxqstudio.eth: 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e
+    }
 
     /**
-     * @notice Collect fees from a swap
+     * @notice Update treasury address (only owner, for upgradability)
      */
-    function collectFee(address token, uint256 amount) external nonReentrant {
+    function updateTreasuryAddress(address newTreasury) external onlyOwner {
+        require(newTreasury != address(0), "Invalid treasury address");
+        address oldAddress = treasuryAddress;
+        treasuryAddress = newTreasury;
+        emit TreasuryAddressUpdated(oldAddress, newTreasury);
+    }
+
+    /**
+     * @notice Set authorized caller status
+     */
+    function setAuthorizedCaller(address caller, bool status) external onlyOwner {
+        require(caller != address(0), "Invalid caller address");
+        authorizedCallers[caller] = status;
+        emit AuthorizedCallerUpdated(caller, status);
+    }
+
+    /**
+     * @notice Collect fees from a swap (only authorized callers)
+     */
+    function collectFee(address token, uint256 amount) external payable nonReentrant {
+        require(authorizedCallers[msg.sender], "Caller not authorized");
         require(amount > 0, "Amount must be greater than 0");
 
         if (token == address(0)) {
@@ -87,13 +115,13 @@ contract TreasuryManager is Ownable, ReentrancyGuard {
         tokenBalances[token].lastForwardTime = block.timestamp;
 
         if (token == address(0)) {
-            (bool success,) = TREASURY_ADDRESS.call{value: amount}("");
+            (bool success,) = treasuryAddress.call{value: amount}("");
             require(success, "ETH transfer failed");
         } else {
-            IERC20(token).safeTransfer(TREASURY_ADDRESS, amount);
+            IERC20(token).safeTransfer(treasuryAddress, amount);
         }
 
-        emit FeesForwarded(token, amount, TREASURY_ADDRESS);
+        emit FeesForwarded(token, amount, treasuryAddress);
     }
 
     /**
@@ -145,9 +173,10 @@ contract TreasuryManager is Ownable, ReentrancyGuard {
     }
 
     /**
-     * @notice Receive ETH
+     * @notice Receive ETH - only from authorized callers
      */
     receive() external payable {
+        require(authorizedCallers[msg.sender], "Caller not authorized");
         tokenBalances[address(0)].accumulated += msg.value;
         emit FeeCollected(address(0), msg.value, msg.sender);
     }

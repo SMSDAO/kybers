@@ -29,7 +29,8 @@ contract DeployScript is Script {
         console.log("DynamicFeeManager deployed to:", address(feeManager));
 
         // 3. Deploy TreasuryManager
-        TreasuryManager treasuryManager = new TreasuryManager();
+        address treasuryAddress = 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e; // gxqstudio.eth
+        TreasuryManager treasuryManager = new TreasuryManager(treasuryAddress);
         console.log("TreasuryManager deployed to:", address(treasuryManager));
 
         // 4. Deploy PriceAggregator
@@ -39,6 +40,10 @@ contract DeployScript is Script {
         // 5. Deploy SwapRouter
         SwapRouter swapRouter = new SwapRouter(address(feeManager), address(treasuryManager), address(priceAggregator));
         console.log("SwapRouter deployed to:", address(swapRouter));
+
+        // Authorize SwapRouter to call TreasuryManager
+        treasuryManager.setAuthorizedCaller(address(swapRouter), true);
+        console.log("SwapRouter authorized in TreasuryManager");
 
         // 6. Deploy MEVProtection
         MEVProtection mevProtection = new MEVProtection();

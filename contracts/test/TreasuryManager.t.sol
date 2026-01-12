@@ -20,25 +20,32 @@ contract TreasuryManagerTest is Test {
     MockERC20 public token;
     address public owner;
     address public user1;
+    address public authorizedCaller;
     address public constant TREASURY_ADDRESS = 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e;
 
     function setUp() public {
         owner = address(this);
         user1 = address(0x1);
-        treasury = new TreasuryManager();
+        authorizedCaller = address(0x2);
+        treasury = new TreasuryManager(TREASURY_ADDRESS);
         token = new MockERC20();
+
+        // Authorize caller
+        treasury.setAuthorizedCaller(authorizedCaller, true);
 
         // Fund user1
         token.mint(user1, 1000 ether);
+        token.mint(authorizedCaller, 1000 ether);
         vm.deal(user1, 10 ether);
+        vm.deal(authorizedCaller, 10 ether);
     }
 
     function testTreasuryAddress() public view {
-        assertEq(treasury.TREASURY_ADDRESS(), TREASURY_ADDRESS, "Treasury address mismatch");
+        assertEq(treasury.treasuryAddress(), TREASURY_ADDRESS, "Treasury address mismatch");
     }
 
     function testCollectETHFee() public {
-        vm.startPrank(user1);
+        vm.startPrank(authorizedCaller);
         
         uint256 feeAmount = 0.1 ether;
         treasury.collectFee{value: feeAmount}(address(0), feeAmount);
@@ -49,8 +56,18 @@ contract TreasuryManagerTest is Test {
         vm.stopPrank();
     }
 
-    function testCollectERC20Fee() public {
+    function testUnauthorizedCollectFails() public {
         vm.startPrank(user1);
+        
+        uint256 feeAmount = 0.1 ether;
+        vm.expectRevert("Caller not authorized");
+        treasury.collectFee{value: feeAmount}(address(0), feeAmount);
+
+        vm.stopPrank();
+    }
+
+    function testCollectERC20Fee() public {
+        vm.startPrank(authorizedCaller);
         
         uint256 feeAmount = 10 ether;
         token.approve(address(treasury), feeAmount);
@@ -64,7 +81,7 @@ contract TreasuryManagerTest is Test {
 
     function testAutoForwardThreshold() public {
         // Collect 1.5 ETH (above threshold)
-        vm.startPrank(user1);
+        vm.startPrank(authorizedCaller);
         uint256 feeAmount = 1.5 ether;
         
         uint256 treasuryBalanceBefore = TREASURY_ADDRESS.balance;
@@ -80,7 +97,7 @@ contract TreasuryManagerTest is Test {
     }
 
     function testManualForward() public {
-        vm.startPrank(user1);
+        vm.startPrank(authorizedCaller);
         
         uint256 feeAmount = 0.5 ether;
         treasury.collectFee{value: feeAmount}(address(0), feeAmount);
@@ -109,7 +126,7 @@ contract TreasuryManagerTest is Test {
     }
 
     function testBatchForward() public {
-        vm.startPrank(user1);
+        vm.startPrank(authorizedCaller);
         
         // Collect multiple token fees
         treasury.collectFee{value: 0.5 ether}(address(0), 0.5 ether);
