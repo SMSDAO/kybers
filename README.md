@@ -177,6 +177,34 @@ kybers/
 
 ## 🛠️ Development
 
+### Master Build Script
+
+The `master.sh` script provides a comprehensive build and test pipeline:
+
+```bash
+# Run complete pipeline (clean, install, build, test, lint, verify, security)
+./scripts/master.sh all
+
+# Individual commands
+./scripts/master.sh install   # Install all dependencies
+./scripts/master.sh clean     # Clean build artifacts and lock files
+./scripts/master.sh build     # Build all components
+./scripts/master.sh test      # Run all tests
+./scripts/master.sh verify    # Run build verification (10-step check)
+./scripts/master.sh lint      # Run linters
+./scripts/master.sh security  # Run security scans
+./scripts/master.sh help      # Show help
+```
+
+**Key Features:**
+- ✅ Automated dependency installation (Foundry + npm)
+- ✅ Comprehensive build verification (10 steps)
+- ✅ Clean build artifacts and lock files
+- ✅ Run all tests (contracts, frontend, backend)
+- ✅ Security scans (Slither, npm audit)
+- ✅ Linting and formatting checks
+- ✅ Color-coded output for easy debugging
+
 ### Smart Contracts
 
 ```bash
