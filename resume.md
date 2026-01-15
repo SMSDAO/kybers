@@ -21,7 +21,8 @@ Kybers DEX is a next-generation decentralized exchange protocol designed for spe
 - Card hover transformations
 - Pulse animations
 
-**Screenshot:** `screenshots/landing-page.png`
+**Screenshot:** 
+![Landing Page](https://github.com/user-attachments/assets/63611319-b406-4373-8d03-6d3336f7e8a5)
 
 ---
 
@@ -40,7 +41,8 @@ Kybers DEX is a next-generation decentralized exchange protocol designed for spe
 - Smooth transitions
 - Responsive grid layout
 
-**Screenshot:** `screenshots/dashboard.png`
+**Screenshot:** 
+![Dashboard](https://github.com/user-attachments/assets/6d6f9b6a-0647-43ff-8e0e-987409be3428)
 
 ---
 
@@ -59,7 +61,8 @@ Kybers DEX is a next-generation decentralized exchange protocol designed for spe
 - Token icons
 - Real-time rate updates
 
-**Screenshot:** `screenshots/swap.png`
+**Screenshot:** 
+![Swap Interface](https://github.com/user-attachments/assets/1c0bcc98-8e07-430d-b269-0b38c723e5c4)
 
 ---
 
@@ -78,7 +81,8 @@ Kybers DEX is a next-generation decentralized exchange protocol designed for spe
 - Token pair icons
 - Progress indicators
 
-**Screenshot:** `screenshots/pools.png`
+**Screenshot:** 
+![Liquidity Pools](https://github.com/user-attachments/assets/3cf6027f-5996-4b7f-92a7-9df8ec63bff2)
 
 ---
 
@@ -208,12 +212,12 @@ Error: #EF4444 (Red)
 
 ## Screenshots
 
-All template screenshots are located in the `/screenshots` directory:
+All template screenshots are located in the `/screenshots` directory and displayed above:
 
-1. `landing-page.png` - Main landing page
-2. `dashboard.png` - User dashboard
-3. `swap.png` - Token swap interface
-4. `pools.png` - Liquidity pools
+1. **Landing Page** - Main landing page with hero section, features, and call-to-action
+2. **Dashboard** - User portfolio dashboard with assets and transactions
+3. **Swap** - Token swap interface with price calculations
+4. **Pools** - Liquidity pools management interface
 
 ## Contact
 
