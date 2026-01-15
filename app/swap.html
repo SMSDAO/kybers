@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swap - Kybers DEX</title>
+    <link rel="stylesheet" href="/app/assets/css/main.css">
+    <link rel="stylesheet" href="/app/assets/css/dashboard.css">
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/app/assets/images/logo.svg" alt="Kybers DEX" class="logo-small">
+            <span class="brand-name">Kybers</span>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <input type="text" placeholder="Search tokens..." id="searchInput">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="network-selector" id="networkSelector">
+                <span class="network-icon">🌐</span>
+                <span class="network-name" id="networkName">Ethereum</span>
+            </div>
+            <div class="wallet-info" id="walletInfo">
+                <div class="wallet-balance" id="walletBalance">--</div>
+                <div class="wallet-address" id="walletAddress">Connect Wallet</div>
+            </div>
+            <button class="btn-primary" id="connectWalletBtn">Connect</button>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <nav class="sidebar-nav">
+                <a href="/app/dashboard.html" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/app/swap.html" class="nav-item active">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-text">Swap</span>
+                </a>
+                <a href="/app/pools.html" class="nav-item">
+                    <span class="nav-icon">💧</span>
+                    <span class="nav-text">Pools</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Analytics</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main swap-page">
+            <div class="swap-container">
+                <div class="swap-card">
+                    <div class="swap-header">
+                        <h2>Swap</h2>
+                        <button class="settings-btn" id="settingsBtn">⚙️</button>
+                    </div>
+
+                    <!-- From Token -->
+                    <div class="swap-input-group">
+                        <div class="input-header">
+                            <label>From</label>
+                            <span class="balance" id="fromBalance">Balance: 0.0</span>
+                        </div>
+                        <div class="input-row">
+                            <input type="number" class="swap-input" id="fromAmount" placeholder="0.0">
+                            <button class="token-select" id="fromTokenSelect">
+                                <img src="/app/assets/images/tokens/eth.svg" alt="ETH" class="token-icon">
+                                <span class="token-symbol">ETH</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                        </div>
+                        <div class="input-footer">
+                            <span class="usd-value" id="fromUsdValue">$0.00</span>
+                            <button class="max-btn" id="maxBtn">MAX</button>
+                        </div>
+                    </div>
+
+                    <!-- Swap Direction Button -->
+                    <div class="swap-direction">
+                        <button class="swap-flip-btn" id="swapFlipBtn">
+                            <span class="flip-icon">⇅</span>
+                        </button>
+                    </div>
+
+                    <!-- To Token -->
+                    <div class="swap-input-group">
+                        <div class="input-header">
+                            <label>To</label>
+                            <span class="balance" id="toBalance">Balance: 0.0</span>
+                        </div>
+                        <div class="input-row">
+                            <input type="number" class="swap-input" id="toAmount" placeholder="0.0" readonly>
+                            <button class="token-select" id="toTokenSelect">
+                                <img src="/app/assets/images/tokens/usdt.svg" alt="USDT" class="token-icon">
+                                <span class="token-symbol">USDT</span>
+                                <span class="dropdown-arrow">▼</span>
+                            </button>
+                        </div>
+                        <div class="input-footer">
+                            <span class="usd-value" id="toUsdValue">$0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Swap Details -->
+                    <div class="swap-details" id="swapDetails" style="display: none;">
+                        <div class="detail-row">
+                            <span class="detail-label">Rate</span>
+                            <span class="detail-value" id="swapRate">--</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Price Impact</span>
+                            <span class="detail-value" id="priceImpact">--</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Fee</span>
+                            <span class="detail-value" id="swapFee">0.3%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Slippage Tolerance</span>
+                            <span class="detail-value" id="slippageTolerance">0.5%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Minimum Received</span>
+                            <span class="detail-value" id="minReceived">--</span>
+                        </div>
+                    </div>
+
+                    <!-- Swap Button -->
+                    <button class="btn-primary btn-large swap-btn" id="swapBtn">
+                        <span id="swapBtnText">Connect Wallet</span>
+                    </button>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="swap-chart-card">
+                    <div class="chart-header">
+                        <h3>Price Chart</h3>
+                        <div class="chart-timeframe">
+                            <button class="timeframe-btn active" data-timeframe="1h">1H</button>
+                            <button class="timeframe-btn" data-timeframe="4h">4H</button>
+                            <button class="timeframe-btn" data-timeframe="1d">1D</button>
+                            <button class="timeframe-btn" data-timeframe="1w">1W</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Swaps -->
+            <section class="recent-swaps">
+                <h3>Recent Swaps</h3>
+                <div class="swaps-list" id="recentSwaps">
+                    <div class="empty-state">
+                        <p>No recent swaps</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="dashboard-right-sidebar">
+            <section class="route-info">
+                <h3>Best Route</h3>
+                <div class="route-visual" id="routeVisual">
+                    <p class="text-muted">Select tokens to view route</p>
+                </div>
+            </section>
+
+            <section class="top-tokens">
+                <h3>Top Tokens</h3>
+                <div class="tokens-list" id="topTokens">
+                    <div class="token-item">
+                        <div class="token-info">
+                            <img src="/app/assets/images/tokens/eth.svg" alt="ETH" class="token-icon-small">
+                            <span class="token-name">ETH</span>
+                        </div>
+                        <div class="token-stats">
+                            <span class="token-price">$2,500.00</span>
+                            <span class="token-change positive">+5.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </aside>
+    </div>
+
+    <!-- Token Select Modal -->
+    <div id="tokenModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Select a token</h2>
+            <input type="text" class="token-search" placeholder="Search name or paste address" id="tokenSearch">
+            <div class="token-list" id="tokenList">
+                <!-- Tokens will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/app/assets/js/web3-integration.js"></script>
+    <script src="/app/assets/js/swap.js"></script>
+</body>
+</html>
