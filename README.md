@@ -198,6 +198,86 @@ The `master.sh` script provides a comprehensive build and test pipeline:
 
 **Key Features:**
 - ✅ Automated dependency installation (Foundry + npm)
+- ✅ Color-coded output for easy monitoring
+- ✅ Comprehensive error handling
+- ✅ Modular command structure
+
+### Foundry Updates & Testnet Deployment Script 🆕
+
+The `foundry-updates.sh` script provides complete Foundry setup and testnet deployment preparation:
+
+```bash
+# Run complete Foundry setup and testnet preparation
+./scripts/foundry-updates.sh
+
+# This comprehensive script will:
+# 1. Install/Update Foundry (forge, cast, anvil)
+# 2. Install OpenZeppelin and forge-std dependencies
+# 3. Check RPC health for all 7 testnets (Base, Ethereum, Arbitrum, Optimism, Polygon, BSC, Zora)
+# 4. Check wallet balance on all testnets
+# 5. Display faucet URLs for claiming testnet ETH
+# 6. Integrate UUPS proxy patterns for upgradeable contracts
+# 7. Compile all contracts with size reports
+# 8. Run complete test suite
+# 9. Run Slither security analysis
+# 10. Generate DEPLOYMENT_READINESS.md report
+```
+
+**Testnet RPCs Monitored:**
+- Base Sepolia - https://sepolia.base.org
+- Ethereum Sepolia - https://rpc.sepolia.org
+- Arbitrum Sepolia - https://sepolia-rollup.arbitrum.io/rpc
+- Optimism Sepolia - https://sepolia.optimism.io
+- Polygon Mumbai - https://rpc-mumbai.maticvigil.com
+- BSC Testnet - https://data-seed-prebsc-1-s1.binance.org:8545
+- Zora Testnet - https://testnet.rpc.zora.energy
+
+**Testnet Faucets Included:**
+- Automatic faucet URL display for all chains
+- Balance checking for wallet preparation
+- Claims testnet ETH for deployment gas
+
+### Complete Audit Verification Script 🆕
+
+The `audit-verify.sh` script ensures all smart contracts are secure and ready for merge:
+
+```bash
+# Run complete audit verification (MUST BE GREEN before merge)
+./scripts/audit-verify.sh
+
+# Comprehensive verification includes:
+# 1. Verify all 8 contract files exist
+# 2. Compile all contracts successfully
+# 3. Run complete test suite (100% passing)
+# 4. Check code coverage (>95% target)
+# 5. Security audit verification
+#    - Reentrancy protection
+#    - SafeERC20 usage
+#    - Access control
+#    - Emergency pause functionality
+# 6. Gas optimization analysis
+# 7. Verify all 10 security fixes documented
+# 8. Check contract sizes (<24KB limit)
+# 9. Generate AUDIT_VERIFICATION_REPORT.md
+```
+
+**Security Checks Performed:**
+- ✅ Reentrancy guards on external functions
+- ✅ SafeERC20 for all token operations
+- ✅ Access control modifiers (onlyOwner, onlyRole)
+- ✅ No unchecked arithmetic vulnerabilities
+- ✅ Emergency pause functionality present
+- ✅ All 10 security issues from audit fixed (100%)
+
+**Output:**
+```bash
+# Success output (ALL GREEN):
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  ✅  ALL CHECKS PASSED - CONTRACTS ARE GREEN FOR MERGE  ✅   ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+```
 - ✅ Comprehensive build verification (10 steps)
 - ✅ Clean build artifacts and lock files
 - ✅ Run all tests (contracts, frontend, backend)
