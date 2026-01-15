@@ -73,7 +73,18 @@ check_and_create_release() {
     
     # Check if package.json exists and version changed
     if [ -f "$PROJECT_ROOT/app/package.json" ]; then
-        local current_version=$(jq -r .version "$PROJECT_ROOT/app/package.json")
+        # Verify jq is installed
+        if ! command -v jq &> /dev/null; then
+            log_warning "jq is not installed, skipping version check"
+            return 0
+        fi
+        
+        local current_version=$(jq -r .version "$PROJECT_ROOT/app/package.json" 2>/dev/null)
+        if [ $? -ne 0 ] || [ -z "$current_version" ]; then
+            log_warning "Failed to parse version from package.json"
+            return 0
+        fi
+        
         local latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
         
         if [ "v$current_version" != "$latest_tag" ]; then
@@ -110,11 +121,14 @@ run_tests() {
     log "Running automated tests..."
     
     if [ -f "$PROJECT_ROOT/app/package.json" ]; then
+        local original_dir=$(pwd)
         cd "$PROJECT_ROOT/app"
         if npm run test --if-present >> "$LOG_FILE" 2>&1; then
             log_success "Tests passed"
+            cd "$original_dir"
         else
             log_error "Tests failed"
+            cd "$original_dir"
             return 1
         fi
     else

@@ -5,7 +5,10 @@
 
 set -e
 
-DOCS_DIR="/home/runner/work/kybers/kybers/docs"
+# Use relative paths for portability
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+DOCS_DIR="$PROJECT_ROOT/docs"
 TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
 
 echo "🔄 Starting documentation update..."

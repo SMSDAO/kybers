@@ -26,8 +26,9 @@ validate_version() {
         exit 1
     fi
     
-    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        echo "Error: Invalid version format. Use semantic versioning (e.g., 1.0.0)"
+    # Support semantic versioning with pre-release and build metadata
+    if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$ ]]; then
+        echo "Error: Invalid version format. Use semantic versioning (e.g., 1.0.0, 1.0.0-alpha.1, 1.0.0+build.123)"
         exit 1
     fi
 }
@@ -104,10 +105,16 @@ update_version_files() {
     
     # Update package.json if it exists
     if [ -f "$PROJECT_ROOT/app/package.json" ]; then
-        # Create temporary file with updated version
-        jq ".version = \"$VERSION\"" "$PROJECT_ROOT/app/package.json" > "$PROJECT_ROOT/app/package.json.tmp"
-        mv "$PROJECT_ROOT/app/package.json.tmp" "$PROJECT_ROOT/app/package.json"
-        log "Updated app/package.json"
+        # Verify jq is installed
+        if ! command -v jq &> /dev/null; then
+            echo "Warning: jq is not installed, skipping package.json update"
+        else
+            # Use jq with --arg for safer variable substitution
+            jq --arg ver "$VERSION" '.version = $ver' "$PROJECT_ROOT/app/package.json" > "$PROJECT_ROOT/app/package.json.tmp" && \
+            mv "$PROJECT_ROOT/app/package.json.tmp" "$PROJECT_ROOT/app/package.json" || \
+            (rm -f "$PROJECT_ROOT/app/package.json.tmp" && echo "Error: Failed to update package.json" && exit 1)
+            log "Updated app/package.json"
+        fi
     fi
     
     # Update version in documentation
