@@ -294,17 +294,55 @@ npm audit
 
 ## 🚢 Deployment
 
-### Complete Deployment
+### Build Verification (Required First)
+
+```bash
+# Run comprehensive build verification before deployment
+./scripts/build-verify.sh
+
+# Must pass all checks (all green ✓) before proceeding
+```
+
+### Testnet Deployment
+
+```bash
+# Deploy to testnet (contracts remain same for mainnet migration)
+./scripts/testnet-deploy.sh base-sepolia
+
+# Supported testnets:
+# - base-sepolia (Base Testnet)
+# - sepolia (Ethereum Testnet)
+# - arbitrum-sepolia (Arbitrum Testnet)
+# - optimism-sepolia (Optimism Testnet)
+# - polygon-mumbai (Polygon Testnet)
+# - bsc-testnet (BSC Testnet)
+
+# After deployment, test thoroughly using TESTING_GUIDE.md
+```
+
+### Mainnet Deployment
+
+```bash
+# ⚠️ PRODUCTION DEPLOYMENT - Use with extreme care
+# Contracts must be identical to tested testnet deployment
+
+# Deploy to mainnet
+./scripts/mainnet-deploy.sh ethereum
+./scripts/mainnet-deploy.sh base
+./scripts/mainnet-deploy.sh zora
+# ... other chains
+
+# Requires triple confirmation and comprehensive pre-checks
+```
+
+### Complete Deployment (All Services)
 
 ```bash
 # Deploy everything (contracts + frontend + backend)
 ./scripts/deploy-all.sh
 
-# Deploy to testnet
-./scripts/deploy-all.sh testnet
-
-# Deploy to mainnet
-./scripts/deploy-all.sh mainnet
+# Production launch with monitoring
+./scripts/launch-production.sh production
 ```
 
 ### Docker Deployment
@@ -348,6 +386,106 @@ kubectl logs -f deployment/kybers-frontend
 - **Chain Distribution**: Volume breakdown by chain
 - **System Status**: Contract and service health
 - **User Analytics**: Active users and transaction counts
+
+---
+
+## 🧪 Testing & Validation
+
+### Comprehensive Testing
+
+```bash
+# Build verification (prerequisite for deployment)
+./scripts/build-verify.sh
+
+# Run all contract tests
+forge test -vvv
+
+# Generate coverage report
+forge coverage
+
+# Run security scans
+slither contracts/
+```
+
+### Testing Documentation
+
+- **[Complete Testing Guide](docs/TESTING_GUIDE.md)** - Comprehensive testing procedures
+- **[Contract Integrity](docs/CONTRACT_INTEGRITY.md)** - Ensures code consistency testnet→mainnet
+- **[Security Audit](docs/SECURITY_AUDIT.md)** - Full security audit report (10/10 issues fixed)
+- **[Audit Changes](AUDIT_CHANGES.md)** - Detailed security fixes summary
+
+### Pre-Launch Verification
+
+```bash
+# Run pre-launch checks (50+ automated checks)
+./scripts/pre-launch-verify.sh
+
+# All checks must pass before mainnet deployment
+```
+
+---
+
+## 📚 Documentation
+
+### Core Documentation
+
+- **[README.md](README.md)** - This file (project overview)
+- **[SMART_CONTRACTS.md](docs/SMART_CONTRACTS.md)** - Contract reference
+- **[DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Deployment guide
+- **[API.md](docs/API.md)** - API documentation
+- **[TOKENOMICS.md](docs/TOKENOMICS.md)** - Fee structure & partner program
+
+### Security & Testing
+
+- **[SECURITY_AUDIT.md](docs/SECURITY_AUDIT.md)** - Security audit report
+- **[TESTING_GUIDE.md](docs/TESTING_GUIDE.md)** - Complete testing procedures
+- **[CONTRACT_INTEGRITY.md](docs/CONTRACT_INTEGRITY.md)** - Code consistency verification
+
+### Implementation
+
+- **[IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md)** - Implementation overview
+- **[AUDIT_CHANGES.md](AUDIT_CHANGES.md)** - Security fixes summary
+- **[Landing Page](docs/index.html)** - Cyberpunk-themed docs portal
+
+---
+
+## 🔐 Security Features
+
+### Security Audit Status
+
+✅ **Complete** - All 10 issues fixed (100% resolution)
+
+| Severity | Count | Status |
+|----------|-------|--------|
+| Critical | 3 | ✅ Fixed |
+| High | 2 | ✅ Fixed |
+| Medium | 3 | ✅ Fixed |
+| Low | 2 | ✅ Fixed |
+
+### Security Enhancements
+
+- ✅ Safe token approval patterns (reset before/after)
+- ✅ Authorization system for fee collection
+- ✅ Comprehensive input validation
+- ✅ Multi-hop route validation (max 4 hops)
+- ✅ Minimum output protection (1% slippage)
+- ✅ MEV protection (rate limiting, blacklisting)
+- ✅ Emergency pause functionality
+- ✅ Reentrancy guards
+- ✅ 24-hour timelock for critical operations
+
+### Running Security Scans
+
+```bash
+# Static analysis with Slither
+slither contracts/
+
+# Symbolic execution with Mythril
+myth analyze contracts/core/*.sol
+
+# Manual security review
+# See docs/SECURITY_AUDIT.md for checklist
+```
 
 ---
 
