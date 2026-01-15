@@ -53,6 +53,10 @@ contract DeployScript is Script {
         CrossChainRouter crossChainRouter = new CrossChainRouter();
         console.log("CrossChainRouter deployed to:", address(crossChainRouter));
 
+        // 8. Deploy PartnerAPI
+        PartnerAPI partnerAPI = new PartnerAPI();
+        console.log("PartnerAPI deployed to:", address(partnerAPI));
+
         // Save deployment addresses
         string memory deploymentInfo = string(
             abi.encodePacked(
