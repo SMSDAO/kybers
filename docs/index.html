@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kybers DEX - Advanced Multi-Chain Aggregator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-cyan: #00fff9;
+            --neon-purple: #b537f2;
+            --neon-pink: #ff006e;
+            --neon-green: #39ff14;
+            --dark-bg: #0a0e27;
+            --dark-card: #1a1f3a;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Grid Background */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 249, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 249, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(0, 255, 249, 0.2);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--neon-cyan);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px var(--neon-cyan)); }
+            to { filter: drop-shadow(0 0 20px var(--neon-purple)); }
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 6rem 0;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 0 30px rgba(181, 55, 242, 0.5);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(181, 55, 242, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 50px rgba(181, 55, 242, 0.8); }
+        }
+
+        .cta-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 60px rgba(181, 55, 242, 1);
+        }
+
+        /* Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(26, 31, 58, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 249, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 249, 0.3);
+            border-color: var(--neon-cyan);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--neon-cyan);
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: rgba(26, 31, 58, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(181, 55, 242, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 0.5rem;
+        }
+
+        /* Documentation Links */
+        .docs-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 4rem 0;
+        }
+
+        .doc-link {
+            background: rgba(26, 31, 58, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 0, 110, 0.3);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .doc-link:hover {
+            border-color: var(--neon-pink);
+            box-shadow: 0 10px 30px rgba(255, 0, 110, 0.3);
+        }
+
+        .doc-link h4 {
+            color: var(--neon-pink);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(0, 255, 249, 0.2);
+            margin-top: 4rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--neon-cyan);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--neon-purple);
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-background"></div>
+
+    <header>
+        <div class="container">
+            <div class="logo">⚡ KYBERS</div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Advanced DEX Aggregator</h1>
+                <p>15+ DEXs · 7 Chains · 0.05% Base Fee · MEV Protected</p>
+                <a href="#" class="cta-button">Launch App</a>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="container" style="grid-column: 1 / -1;">
+                <div class="stats" style="display: grid;">
+                    <div class="stat-item">
+                        <div class="stat-number">15+</div>
+                        <div class="stat-label">DEX Integrations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Supported Chains</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0.05%</div>
+                        <div class="stat-label">Base Fee</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Security Audit</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem; color: var(--neon-cyan);">Key Features</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔀</div>
+                        <h3>Smart Routing</h3>
+                        <p>Automatically finds the best price across 15+ DEXs with multi-hop optimization and minimal slippage.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>MEV Protection</h3>
+                        <p>Advanced protection against frontrunning and sandwich attacks with rate limiting and bot detection.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⛓️</div>
+                        <h3>Multi-Chain</h3>
+                        <p>Seamlessly swap across Ethereum, Base, Zora, Arbitrum, Optimism, Polygon, and BSC.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3>Dynamic Fees</h3>
+                        <p>0.05% base fee with volume discounts and partner revenue sharing program.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔐</div>
+                        <h3>Audited & Secure</h3>
+                        <p>Full security audit completed with all 10 issues resolved. Production-ready contracts.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Gas Optimized</h3>
+                        <p>Highly optimized smart contracts for minimal gas costs on all supported chains.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="container">
+                <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem; color: var(--neon-purple);">Documentation</h2>
+                <div class="docs-links">
+                    <a href="docs/SMART_CONTRACTS.md" class="doc-link">
+                        <h4>📝 Smart Contracts</h4>
+                        <p>Complete contract reference and API documentation</p>
+                    </a>
+                    <a href="docs/DEPLOYMENT.md" class="doc-link">
+                        <h4>🚀 Deployment Guide</h4>
+                        <p>Step-by-step deployment instructions for all chains</p>
+                    </a>
+                    <a href="docs/API.md" class="doc-link">
+                        <h4>🔌 API Reference</h4>
+                        <p>Backend API endpoints and integration examples</p>
+                    </a>
+                    <a href="docs/SECURITY_AUDIT.md" class="doc-link">
+                        <h4>🔒 Security Audit</h4>
+                        <p>Complete security audit report with all findings</p>
+                    </a>
+                    <a href="AUDIT_CHANGES.md" class="doc-link">
+                        <h4>📋 Audit Changes</h4>
+                        <p>Detailed summary of security fixes applied</p>
+                    </a>
+                    <a href="README.md" class="doc-link">
+                        <h4>📖 Getting Started</h4>
+                        <p>Quick start guide and architecture overview</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Kybers DEX. Built with ⚡ by gxqstudio.eth</p>
+            <div class="social-links">
+                <a href="https://github.com/SMSDAO/kybers" target="_blank">GitHub</a>
+                <a href="#" target="_blank">Twitter</a>
+                <a href="#" target="_blank">Discord</a>
+                <a href="#" target="_blank">Docs</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

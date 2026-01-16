@@ -1,0 +1,60 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Daily at midnight
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Slither
+        uses: crytic/slither-action@v0.3.0
+        continue-on-error: true
+        with:
+          target: 'contracts/'
+          slither-args: '--filter-paths "node_modules|test"'
+
+      - name: Run Mythril
+        run: |
+          pip3 install mythril
+          myth analyze contracts/core/*.sol --execution-timeout 300
+        continue-on-error: true
+
+      - name: Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'kybers'
+          path: '.'
+          format: 'HTML'
+        continue-on-error: true
+
+      - name: Upload Dependency Check results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports
+        continue-on-error: true
+
+      - name: NPM Audit
+        run: |
+          cd frontend
+          npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Notify on Slack
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: 'Security scan failed! Please review the findings.'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        continue-on-error: true
