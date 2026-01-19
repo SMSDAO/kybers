@@ -18,7 +18,9 @@ update_timestamp() {
     local file="$1"
     if [ -f "$file" ]; then
         # Update the last updated line
-        sed -i "s/\*Last updated:.*/\*Last updated: $TIMESTAMP (Auto-generated on merge to main)\*/" "$file"
+        # Use cross-platform sed approach: create backup, remove it after
+        sed -i.bak "s/\*Last updated:.*/\*Last updated: $TIMESTAMP (Auto-generated on merge to main)\*/" "$file"
+        rm -f "$file.bak"
         echo "✅ Updated: $file"
     fi
 }

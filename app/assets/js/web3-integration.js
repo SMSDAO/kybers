@@ -92,6 +92,10 @@ class Web3Integration {
         // For now, we'll simulate the connection
         
         // Simulate connection
+        // WARNING: This is for demonstration only!
+        // The wallet address is generated using Math.random() which is cryptographically insecure.
+        // Never use this to generate actual wallet addresses in production.
+        // In production, use proper wallet connection libraries that handle address generation securely.
         this.address = '0x' + Array(40).fill(0).map(() => 
             Math.floor(Math.random() * 16).toString(16)
         ).join('');
@@ -115,6 +119,9 @@ class Web3Integration {
             this.address = accounts[0];
         } else {
             // Simulate connection
+            // WARNING: This is for demonstration only!
+            // The wallet address is generated using Math.random() which is cryptographically insecure.
+            // Never use this to generate actual wallet addresses in production.
             this.address = '0x' + Array(40).fill(0).map(() => 
                 Math.floor(Math.random() * 16).toString(16)
             ).join('');
@@ -219,6 +226,10 @@ class Web3Integration {
         console.log('🔄 Executing swap:', { fromToken, toToken, amount });
         
         // Simulate transaction
+        // WARNING: This is for demonstration/testing only! 
+        // The transaction hash is generated using Math.random() which is cryptographically insecure.
+        // Never use this approach in production environments where actual blockchain transactions are executed.
+        // In production, use a proper Web3 provider to execute real transactions.
         return new Promise((resolve) => {
             setTimeout(() => {
                 const txHash = '0x' + Array(64).fill(0).map(() => 

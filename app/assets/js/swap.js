@@ -327,7 +327,6 @@ async function executeSwap(amount) {
 
 // Update Swap Button State
 function updateSwapButton() {
-    const swapBtn = document.getElementById('swapBtn');
     const btnText = document.getElementById('swapBtnText');
     
     if (!web3Integration.isConnected) {
