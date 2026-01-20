@@ -113,7 +113,7 @@ npx vercel --prod
 
 ### Classic Interface
 ```
-https://kybers.io/app/
+https://example.com/app/          # Replace with your domain
 ├── /app/index.html          → Landing page
 ├── /app/dashboard.html      → Portfolio dashboard
 ├── /app/swap.html           → Token swap
@@ -122,7 +122,7 @@ https://kybers.io/app/
 
 ### Modern UI
 ```
-https://kybers-dex.vercel.app/
+https://kybers-dex.vercel.app/    # Example production URL
 ├── /                        → Main swap interface
 ├── /admin                   → Admin dashboard
 ├── /pools                   → Liquidity pools

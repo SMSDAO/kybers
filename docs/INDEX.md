@@ -72,11 +72,11 @@ Information about the founding team and core contributors.
 - `./scripts/audit-verify.sh` - Complete audit verification
 
 ### Workflows
-- [Test Contracts](./.github/workflows/test-contracts.yml) - Automated contract testing
-- [Deploy Frontend](./.github/workflows/deploy-frontend.yml) - Frontend deployment
-- [Deploy Contracts](./.github/workflows/deploy-contracts.yml) - Contract deployment
-- [Master Automation](./.github/workflows/master-automation.yml) - Post-merge automation
-- [Security Scan](./.github/workflows/security-scan.yml) - Security scanning
+- [Test Contracts](../.github/workflows/test-contracts.yml) - Automated contract testing
+- [Deploy Frontend](../.github/workflows/deploy-frontend.yml) - Frontend deployment
+- [Deploy Contracts](../.github/workflows/deploy-contracts.yml) - Contract deployment
+- [Master Automation](../.github/workflows/master-automation.yml) - Post-merge automation
+- [Security Scan](../.github/workflows/security-scan.yml) - Security scanning
 
 ## 📊 System Status
 

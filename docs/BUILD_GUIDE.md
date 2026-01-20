@@ -488,7 +488,7 @@ If you encounter build issues:
 
 1. Check this guide first
 2. Search [existing issues](https://github.com/SMSDAO/kybers/issues)
-3. Ask in [Discord community](https://discord.gg/kybers)
+3. Join community discussions (see project README for links)
 4. Create a [new issue](https://github.com/SMSDAO/kybers/issues/new)
 
 ---
