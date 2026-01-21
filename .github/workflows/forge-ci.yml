@@ -1,0 +1,72 @@
+name: Forge CI and Testnet Broadcast
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Test Contracts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: latest
+
+      - name: Cache Forge build
+        uses: actions/cache@v4
+        with:
+          path: |
+            out
+            cache
+          key: ${{ runner.os }}-forge-${{ hashFiles('foundry.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-forge-
+
+      - name: Forge build
+        run: forge build
+
+      - name: Forge test
+        run: forge test
+
+  broadcast-testnet:
+    name: Broadcast Deploy to Testnet
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: latest
+
+      - name: Broadcast deploy script to testnet
+        env:
+          RPC_URL: ${{ secrets.TESTNET_RPC_URL }}
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+        run: |
+          forge script script/Deploy.s.sol:Deploy \
+            --rpc-url "$RPC_URL" \
+            --private-key "$PRIVATE_KEY" \
+            --broadcast \
+            --verify \
+            --etherscan-api-key "$ETHERSCAN_API_KEY"
