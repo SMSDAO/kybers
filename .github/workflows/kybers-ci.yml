@@ -42,6 +42,19 @@ jobs:
         with:
           version: latest
 
+      - name: Show deployer address
+        run: cast wallet address $PRIVATE_KEY
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+
+      - name: Claim Base Sepolia faucet (one-time)
+        run: |
+          curl -X POST https://faucet.base.org/api/v1/drip \
+            -H "Content-Type: application/json" \
+            -d "{\"address\": \"$(cast wallet address $PRIVATE_KEY)\"}"
+        env:
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+
       - name: Broadcast Deploy Script
         env:
           RPC_URL: ${{ secrets.TESTNET_RPC_URL }}
