@@ -35,7 +35,7 @@ contract SwapRouter is ISwapRouter, Ownable, ReentrancyGuard, Pausable {
     event DexRemoved(address indexed dex);
     event SlippageExceeded(address indexed user, uint256 expected, uint256 actual);
 
-    constructor(address _feeManager, address _treasuryManager, address _priceAggregator) Ownable(msg.sender) {
+    constructor(address _feeManager, address payable _treasuryManager, address _priceAggregator) Ownable(msg.sender) {
         feeManager = DynamicFeeManager(_feeManager);
         treasuryManager = TreasuryManager(_treasuryManager);
         priceAggregator = PriceAggregator(_priceAggregator);

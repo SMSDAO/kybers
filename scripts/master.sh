@@ -68,6 +68,11 @@ cd "$PROJECT_ROOT"
 cmd_install() {
     print_header "Installing Dependencies"
     
+    # Ensure submodules are up to date first
+    print_info "Syncing and updating submodules..."
+    git submodule sync --recursive 2>/dev/null || print_warning "Submodule sync failed"
+    git submodule update --init --recursive || print_warning "Submodule update failed"
+    
     print_info "Installing Foundry dependencies..."
     if command -v forge &> /dev/null; then
         # Self-healing: reinitialize submodules if needed
@@ -153,6 +158,10 @@ cmd_clean() {
 
 cmd_build() {
     print_header "Building All Components"
+    
+    # Ensure submodules are up to date before building
+    print_info "Verifying submodules..."
+    git submodule update --init --recursive 2>/dev/null || print_warning "Submodule update failed"
     
     print_info "Building smart contracts..."
     if command -v forge &> /dev/null; then
