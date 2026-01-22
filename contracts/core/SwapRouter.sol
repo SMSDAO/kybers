@@ -77,9 +77,8 @@ contract SwapRouter is ISwapRouter, Ownable, ReentrancyGuard, Pausable {
         } else {
             IERC20(params.tokenIn).safeTransferFrom(msg.sender, address(this), params.amountIn);
             if (fee > 0) {
-                IERC20(params.tokenIn).safeApprove(address(treasuryManager), fee);
+                IERC20(params.tokenIn).forceApprove(address(treasuryManager), fee);
                 treasuryManager.collectFee(params.tokenIn, fee);
-                IERC20(params.tokenIn).safeApprove(address(treasuryManager), 0);
             }
         }
 
@@ -140,9 +139,8 @@ contract SwapRouter is ISwapRouter, Ownable, ReentrancyGuard, Pausable {
         } else {
             IERC20(params.tokenIn).safeTransferFrom(msg.sender, address(this), params.amountIn);
             if (fee > 0) {
-                IERC20(params.tokenIn).safeApprove(address(treasuryManager), fee);
+                IERC20(params.tokenIn).forceApprove(address(treasuryManager), fee);
                 treasuryManager.collectFee(params.tokenIn, fee);
-                IERC20(params.tokenIn).safeApprove(address(treasuryManager), 0);
             }
         }
 
@@ -201,11 +199,10 @@ contract SwapRouter is ISwapRouter, Ownable, ReentrancyGuard, Pausable {
         require(recipient != address(0), "Invalid recipient");
         require(amountIn > 0, "Invalid amount");
 
-        // Approve token spending - use SafeERC20 and reset approval after
+        // Approve token spending - use SafeERC20 forceApprove
         if (tokenIn != address(0)) {
             IERC20 token = IERC20(tokenIn);
-            token.safeApprove(dex, 0); // Reset to 0 first
-            token.safeApprove(dex, amountIn);
+            token.forceApprove(dex, amountIn);
         }
 
         // Build path
@@ -227,13 +224,13 @@ contract SwapRouter is ISwapRouter, Ownable, ReentrancyGuard, Pausable {
             amountOut = amounts[amounts.length - 1];
             
             // Reset approval after swap
-            IERC20(tokenIn).safeApprove(dex, 0);
+            IERC20(tokenIn).forceApprove(dex, 0);
         } else {
             uint256[] memory amounts = router.swapExactTokensForTokens(amountIn, minOutput, path, recipient, block.timestamp);
             amountOut = amounts[amounts.length - 1];
             
             // Reset approval after swap
-            IERC20(tokenIn).safeApprove(dex, 0);
+            IERC20(tokenIn).forceApprove(dex, 0);
         }
         
         require(amountOut > 0, "Swap failed - zero output");
