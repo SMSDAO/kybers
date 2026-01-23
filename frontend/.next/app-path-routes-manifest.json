@@ -1,0 +1,14 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/health/route": "/api/health",
+  "/api/prices/[tokenIn]/[tokenOut]/route": "/api/prices/[tokenIn]/[tokenOut]",
+  "/api/route/[tokenIn]/[tokenOut]/[amount]/route": "/api/route/[tokenIn]/[tokenOut]/[amount]",
+  "/page": "/",
+  "/partner/page": "/partner",
+  "/admin/analytics/page": "/admin/analytics",
+  "/admin/contracts/page": "/admin/contracts",
+  "/admin/dashboard/page": "/admin/dashboard",
+  "/admin/fees/page": "/admin/fees",
+  "/admin/treasury/page": "/admin/treasury",
+  "/admin/security/page": "/admin/security"
+}

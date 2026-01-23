@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 
 export async function GET(
   request: Request,
-  { params }: { params: { tokenIn: string; tokenOut: string; amount: string } }
+  { params }: { params: Promise<{ tokenIn: string; tokenOut: string; amount: string }> }
 ) {
-  const { tokenIn, tokenOut, amount } = params
+  const { tokenIn, tokenOut, amount } = await params
 
   // TODO: Implement actual route calculation
   // This is mock data matching the original Express backend

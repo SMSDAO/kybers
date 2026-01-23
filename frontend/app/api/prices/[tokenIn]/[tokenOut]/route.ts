@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 
 export async function GET(
   request: Request,
-  { params }: { params: { tokenIn: string; tokenOut: string } }
+  { params }: { params: Promise<{ tokenIn: string; tokenOut: string }> }
 ) {
-  const { tokenIn, tokenOut } = params
+  const { tokenIn, tokenOut } = await params
 
   // TODO: Implement actual price aggregation
   // This is mock data matching the original Express backend
