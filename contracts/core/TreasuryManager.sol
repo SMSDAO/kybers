@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 contract TreasuryManager is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    address public treasuryAddress;
+    address payable public treasuryAddress;
     uint256 public constant AUTO_FORWARD_THRESHOLD = 1 ether;
 
     // Authorized callers (e.g., SwapRouter)
@@ -35,7 +35,7 @@ contract TreasuryManager is Ownable, ReentrancyGuard {
     event TreasuryAddressUpdated(address indexed oldAddress, address indexed newAddress);
     event AuthorizedCallerUpdated(address indexed caller, bool status);
 
-    constructor(address _treasuryAddress) Ownable(msg.sender) {
+    constructor(address payable _treasuryAddress) Ownable(msg.sender) {
         require(_treasuryAddress != address(0), "Invalid treasury address");
         treasuryAddress = _treasuryAddress; // gxqstudio.eth: 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e
     }
@@ -43,7 +43,7 @@ contract TreasuryManager is Ownable, ReentrancyGuard {
     /**
      * @notice Update treasury address (only owner, for upgradability)
      */
-    function updateTreasuryAddress(address newTreasury) external onlyOwner {
+    function updateTreasuryAddress(address payable newTreasury) external onlyOwner {
         require(newTreasury != address(0), "Invalid treasury address");
         address oldAddress = treasuryAddress;
         treasuryAddress = newTreasury;
