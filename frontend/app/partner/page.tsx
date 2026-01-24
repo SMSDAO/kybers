@@ -12,7 +12,12 @@ export default function PartnerDashboard() {
     isActive: false,
   });
 
-  const [recentReferrals, setRecentReferrals] = useState([]);
+  const [recentReferrals, setRecentReferrals] = useState<Array<{
+    user: string;
+    volume: string;
+    earned: string;
+    date: string;
+  }>>([]);
 
   useEffect(() => {
     fetchPartnerData();

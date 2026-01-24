@@ -1,4 +1,4 @@
-export const NETWORKS = {
+export const NETWORKS: Record<string, any> = {
   base: {
     chainId: 84532,
     name: "Base Sepolia",
