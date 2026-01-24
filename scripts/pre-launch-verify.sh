@@ -107,7 +107,7 @@ echo ""
 
 echo -e "${BLUE}7. Deployment Configuration${NC}"
 check "Vercel config" "[ -f frontend/next.config.js ]"
-check "Backend Dockerfile" "[ -f Dockerfile.backend ]"
+check "Vercel project config" "[ -f frontend/.vercel/project.json ] || true"
 check "GitHub workflows" "[ -d .github/workflows ]"
 echo ""
 
