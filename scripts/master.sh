@@ -145,7 +145,7 @@ cmd_clean() {
     
     print_info "Cleaning node_modules (optional - commented out by default)..."
     # Uncomment to remove node_modules
-    # rm -rf frontend/node_modules services/node_modules
+    # rm -rf frontend/node_modules
     
     print_info "Cleaning lock files..."
     find . -name "package-lock.json" -type f -delete

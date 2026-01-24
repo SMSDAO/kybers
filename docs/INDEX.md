@@ -32,13 +32,12 @@
 
 ## 🌐 Web Applications
 
-### Frontend Applications
-- **Main DEX Interface** - [Frontend (Next.js 15)](../frontend/) - Production-ready trading UI
-- **Classic Interface** - [App (HTML/JS)](../app/) - Lightweight static interface
+### Frontend Application
+- **Main DEX Interface** - [Frontend (Next.js 15)](../frontend/) - Production-ready trading UI with integrated API routes
 
 ### Admin & Services
 - [Admin Dashboard](../frontend/app/admin/) - Real-time metrics and controls
-- [Backend Services](../services/) - API, indexer, and aggregator services
+- [API Routes](../frontend/app/api/) - Next.js serverless API endpoints for price aggregation and routing
 
 ## 📢 Organization Documentation
 
