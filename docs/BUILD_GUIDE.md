@@ -54,23 +54,23 @@ cd kybers
    git --version  # Should be >= 2.0
    ```
 
-4. **Optional: Docker** (For containerized deployment)
+4. **Optional: Docker** (For smart contract testing with anvil)
    ```bash
    docker --version
-   docker-compose --version
    ```
 
 ## Project Structure
 
 ```
 kybers/
-├── package.json              # Root package (workspace)
+├── package.json              # Root package configuration
 ├── contracts/                # Smart contracts (Foundry)
-├── frontend/                 # Next.js application
-│   └── package.json
-├── app/                      # Classic HTML interface
-│   └── package.json
-├── services/                 # Backend services
+├── frontend/                 # Next.js application + API routes
+│   ├── app/                  # Next.js App Router
+│   │   ├── api/              # API routes (serverless)
+│   │   ├── admin/            # Admin dashboard
+│   │   └── partner/          # Partner program
+│   ├── components/           # React components
 │   └── package.json
 ├── scripts/                  # Build & deploy scripts
 └── .github/workflows/        # CI/CD pipelines
@@ -428,21 +428,20 @@ act -j test
 - Parallelize builds
 - Skip unnecessary rebuilds
 
-## Docker Builds
+## Vercel Deployment
+
+The frontend (including API routes) is deployed to Vercel:
 
 ```bash
-# Build all services
-docker-compose build
+# Install Vercel CLI
+npm i -g vercel
 
-# Build specific service
-docker-compose build frontend
-
-# Run services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f frontend
+# Deploy
+cd frontend
+vercel --prod
 ```
+
+Or use GitHub integration for automatic deployments.
 
 ## Production Build
 

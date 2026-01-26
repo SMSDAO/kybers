@@ -82,7 +82,6 @@ foundryup
 
 # Install Node dependencies
 cd frontend && npm install
-cd ../services && npm install
 cd ..
 ```
 
@@ -100,18 +99,14 @@ forge test
 
 5. **Start development environment**
 ```bash
-# Using Docker Compose
-docker-compose up -d
-
-# Or run services individually
+# Start the Next.js development server
 cd frontend && npm run dev
-cd services && npm run dev
 ```
 
 6. **Access the application**
 - Frontend: http://localhost:3000
 - Admin Dashboard: http://localhost:3000/admin
-- Backend API: http://localhost:4000
+- API Routes: http://localhost:3000/api/*
 
 ---
 
@@ -136,23 +131,23 @@ kybers/
 │   └── script/           # Deployment scripts
 │
 ├── frontend/              # Next.js 15 + React 19 UI
-│   ├── app/              # App router pages
+│   ├── app/              # App router
 │   │   ├── page.tsx      # Main swap interface
-│   │   └── admin/        # Admin dashboard
+│   │   ├── admin/        # Admin dashboard
+│   │   ├── partner/      # Partner program pages
+│   │   └── api/          # Next.js API routes
+│   │       ├── health/   # Health check endpoint
+│   │       ├── prices/   # Price aggregation API
+│   │       └── route/    # Route optimization API
 │   ├── components/       # React components
 │   │   ├── SwapCard.tsx
 │   │   ├── TokenInput.tsx
 │   │   ├── PriceComparison.tsx
 │   │   └── RouteVisualizer.tsx
+│   ├── src/              # Core application logic
 │   ├── lib/              # Web3 integration
 │   ├── styles/           # CSS and themes
 │   └── public/           # Static assets
-│
-├── services/              # Backend services
-│   ├── aggregator/       # Price aggregation
-│   ├── indexer/          # Blockchain indexer
-│   ├── oracle/           # Oracle service
-│   └── api/              # GraphQL API
 │
 ├── .github/workflows/     # CI/CD pipelines
 │   ├── test-contracts.yml
@@ -164,12 +159,14 @@ kybers/
 │   ├── deploy-all.sh
 │   └── deploy-contracts.sh
 │
-├── infra/                 # Infrastructure
-│   ├── docker/
-│   └── kubernetes/
+├── docs/                  # Documentation
+│   ├── API.md
+│   ├── DEPLOYMENT.md
+│   ├── TESTING_GUIDE.md
+│   └── ...
 │
 ├── foundry.toml          # Foundry configuration
-├── docker-compose.yml    # Docker orchestration
+├── package.json          # Root package configuration
 └── README.md             # This file
 ```
 
@@ -325,17 +322,18 @@ npm start
 npm run lint
 ```
 
-### Backend Services
+### Next.js API Routes
+
+The backend API has been consolidated into Next.js API routes:
 
 ```bash
-cd services
+# API routes are automatically available when running the dev server
+cd frontend && npm run dev
 
-# Start all services
-npm run dev
-
-# Run specific service
-npm run aggregator
-npm run indexer
+# API endpoints available at:
+# - GET /api/health - Health check
+# - GET /api/prices/[tokenIn]/[tokenOut] - Get token prices
+# - GET /api/route/[tokenIn]/[tokenOut]/[amount] - Get optimal swap route
 ```
 
 ---
@@ -453,34 +451,21 @@ npm audit
 ./scripts/launch-production.sh production
 ```
 
-### Docker Deployment
+### Vercel Deployment (Recommended)
 
 ```bash
-# Build images
-docker-compose build
+# Install Vercel CLI
+npm install -g vercel
 
-# Start services
-docker-compose up -d
+# Deploy to Vercel
+cd frontend
+vercel
 
-# View logs
-docker-compose logs -f
-
-# Stop services
-docker-compose down
+# Deploy to production
+vercel --prod
 ```
 
-### Kubernetes Deployment
-
-```bash
-# Apply configurations
-kubectl apply -f infra/kubernetes/
-
-# Check status
-kubectl get pods
-
-# View logs
-kubectl logs -f deployment/kybers-frontend
-```
+The application is optimized for Vercel deployment with Next.js 15. The frontend and API routes are deployed together as a single application.
 
 ---
 

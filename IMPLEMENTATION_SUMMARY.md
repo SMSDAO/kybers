@@ -371,15 +371,16 @@ forge test -vvv
 ./scripts/deploy-all.sh
 ```
 
-### Docker Quick Start
+### Quick Start
 
 ```bash
-# Start all services
-docker-compose up -d
+# Start Next.js development server
+cd frontend
+npm run dev
 
 # Access services
 # Frontend: http://localhost:3000
-# Backend: http://localhost:4000
+# API Routes: http://localhost:3000/api/*
 # Admin: http://localhost:3000/admin
 ```
 
