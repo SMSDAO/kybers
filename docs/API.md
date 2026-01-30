@@ -2,10 +2,25 @@
 
 ## Overview
 
-The Kybers DEX API provides programmatic access to price aggregation, swap routing, and platform analytics.
+The Kybers DEX API provides programmatic access to price aggregation, swap routing, and platform analytics. The API is built with Next.js 15 API routes and deployed on Vercel.
 
-**Base URL**: `https://api.kybers.io` (Production)  
-**Base URL**: `http://localhost:4000` (Development)
+**Base URL**: `https://kybers-dex.vercel.app` (Production)  
+**Base URL**: `http://localhost:3000` (Development)
+
+## Current Implementation Status
+
+### ✅ Implemented Endpoints
+- `GET /api/health` - Health check
+- `GET /api/prices/:tokenIn/:tokenOut` - Get token prices
+- `GET /api/route/:tokenIn/:tokenOut/:amount` - Get optimal swap route
+
+### 🔜 Planned Endpoints (Not Yet Implemented)
+The following endpoints are documented for future implementation:
+- Swap history endpoints (`/api/swaps`, `/api/swaps/:txHash`)
+- Analytics endpoints (`/api/analytics/*`)
+- Treasury endpoints (`/api/treasury/*`)
+- Admin endpoints (`/api/admin/*`)
+- WebSocket API for real-time updates
 
 ## Authentication
 
@@ -60,7 +75,7 @@ Get current prices for a token pair across all DEXs.
 
 **Example:**
 ```bash
-curl https://api.kybers.io/api/prices/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+curl https://kybers-dex.vercel.app/api/prices/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
 ```
 
 #### GET /api/route/:tokenIn/:tokenOut/:amount
@@ -104,7 +119,7 @@ Get optimal route for a swap with expected output.
 
 **Example:**
 ```bash
-curl "https://api.kybers.io/api/route/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/1000000000000000000?slippage=0.5"
+curl "https://kybers-dex.vercel.app/api/route/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/1000000000000000000?slippage=0.5"
 ```
 
 ### Swap History

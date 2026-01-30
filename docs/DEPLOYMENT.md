@@ -6,11 +6,11 @@ Before deploying, ensure you have:
 
 - **Node.js** 20+ installed
 - **Foundry** installed (forge, cast, anvil)
-- **Docker** and Docker Compose installed
 - **Git** installed
 - Private keys for deployment wallets
 - RPC endpoints for target chains
 - API keys for Etherscan, Alchemy, etc.
+- **Vercel account** for frontend deployment
 
 ## Environment Setup
 
@@ -116,7 +116,9 @@ forge verify-contract <contract_address> contracts/core/SwapRouter.sol:SwapRoute
     --etherscan-api-key $ETHERSCAN_API_KEY
 ```
 
-## Frontend Deployment
+## Frontend Deployment (Next.js on Vercel)
+
+The Kybers DEX frontend includes Next.js API routes for price aggregation and routing. Everything is deployed together as a single Next.js application on Vercel.
 
 ### Step 1: Install Dependencies
 
@@ -125,14 +127,38 @@ cd frontend
 npm install
 ```
 
-### Step 2: Build Frontend
+### Step 2: Configure Environment Variables
+
+Create a `.env.local` file in the frontend directory:
+
+```bash
+# WalletConnect
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_walletconnect_id
+
+# Infura/Alchemy
+NEXT_PUBLIC_INFURA_ID=your_infura_id
+
+# Contract Addresses (from smart contract deployment)
+NEXT_PUBLIC_SWAP_ROUTER_ADDRESS=0x...
+NEXT_PUBLIC_PRICE_AGGREGATOR_ADDRESS=0x...
+# ... other contract addresses
+
+# Application URL
+NEXT_PUBLIC_APP_URL=https://kybers-dex.vercel.app
+```
+
+### Step 3: Build and Test Locally
 
 ```bash
 npm run build
+npm start
 ```
 
-### Step 3: Deploy to Vercel
+Visit `http://localhost:3000` to verify everything works.
 
+### Step 4: Deploy to Vercel
+
+**Option A: Vercel CLI**
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -140,57 +166,48 @@ npm i -g vercel
 # Login to Vercel
 vercel login
 
-# Deploy
+# Deploy to preview
+vercel
+
+# Deploy to production
 vercel --prod
 ```
 
-Or use the GitHub integration:
-1. Push to `main` branch
-2. Vercel will automatically deploy
+**Option B: GitHub Integration (Recommended)**
+1. Push your code to GitHub
+2. Connect repository to Vercel
+3. Vercel will automatically deploy on push to main branch
 
-### Step 4: Configure Environment Variables in Vercel
+### Step 5: Configure Environment Variables in Vercel
 
-Add these in Vercel dashboard:
+In the Vercel dashboard, add these environment variables:
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
+- `NEXT_PUBLIC_INFURA_ID`
 - Contract addresses from deployment
+- `NEXT_PUBLIC_APP_URL`
 
-## Backend Services Deployment
+## API Routes
 
-### Option 1: Docker Compose (Recommended)
+The following API routes are automatically deployed with the frontend:
+- `/api/health` - Health check endpoint
+- `/api/prices/[tokenIn]/[tokenOut]` - Price aggregation
+- `/api/route/[tokenIn]/[tokenOut]/[amount]` - Optimal route calculation
 
-```bash
-# Build and start all services
-docker-compose up -d
+These routes are serverless functions running on Vercel's Edge Network.
 
-# Check status
-docker-compose ps
+## Post-Deployment Verification
 
-# View logs
-docker-compose logs -f
-```
-
-Services will be available at:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:4000
-- PostgreSQL: localhost:5432
-- Redis: localhost:6379
-
-### Option 2: Kubernetes
+### 1. Test API Endpoints
 
 ```bash
-# Apply configurations
-kubectl apply -f infra/kubernetes/
+# Health check
+curl https://kybers-dex.vercel.app/api/health
 
-# Check pods
-kubectl get pods
-
-# Get service URLs
-kubectl get services
+# Price check (example)
+curl https://kybers-dex.vercel.app/api/prices/[TOKEN_IN]/[TOKEN_OUT]
 ```
 
-## Post-Deployment Configuration
-
-### 1. Register DEXs in PriceAggregator
+### 2. Register DEXs in PriceAggregator
 
 ```bash
 cast send <PRICE_AGGREGATOR_ADDRESS> \
@@ -208,7 +225,7 @@ Repeat for all DEXs:
 - Balancer
 - etc.
 
-### 2. Add DEXs to SwapRouter
+### 3. Add DEXs to SwapRouter
 
 ```bash
 cast send <SWAP_ROUTER_ADDRESS> \
@@ -218,7 +235,7 @@ cast send <SWAP_ROUTER_ADDRESS> \
     --rpc-url $BASE_RPC_URL
 ```
 
-### 3. Configure Admin Roles
+### 4. Configure Admin Roles
 
 ```bash
 # Grant operator role
@@ -236,7 +253,7 @@ cast send <ADMIN_CONTROL_ADDRESS> \
     --rpc-url $BASE_RPC_URL
 ```
 
-### 4. Update Frontend Contract Addresses
+### 5. Update Frontend Contract Addresses
 
 Edit `frontend/lib/contracts.ts`:
 
@@ -252,35 +269,25 @@ export const CONTRACTS = {
 
 Redeploy frontend after updating.
 
-## Monitoring Setup
+## Monitoring and Health Checks
 
-### 1. Enable Monitoring
+### Health Check Endpoints
 
-```bash
-# Install monitoring tools
-npm install -g pm2
+The application exposes health check endpoints:
+- Frontend: `GET /` (main page)
+- API: `GET /api/health`
 
-# Start services with PM2
-pm2 start services/index.js --name kybers-backend
-pm2 save
-pm2 startup
-```
+Configure your monitoring service (Vercel Analytics, Datadog, etc.) to monitor these endpoints.
 
-### 2. Configure Alerts
+### Vercel Analytics
 
-Add webhook URLs to `.env`:
-```bash
-SLACK_WEBHOOK=https://hooks.slack.com/services/YOUR/WEBHOOK
-DISCORD_WEBHOOK=https://discord.com/api/webhooks/YOUR/WEBHOOK
-```
+Vercel provides built-in analytics for:
+- Page views and performance
+- API route usage and latency
+- Edge function invocations
+- Error tracking
 
-### 3. Health Checks
-
-Services expose health check endpoints:
-- Frontend: `GET /api/health`
-- Backend: `GET /health`
-
-Configure your monitoring service (Datadog, New Relic, etc.) to poll these endpoints.
+Enable in the Vercel dashboard under Analytics.
 
 ## Security Checklist
 
@@ -292,12 +299,11 @@ Before going live:
 - [ ] MEV protection parameters set
 - [ ] Rate limits configured
 - [ ] Treasury address verified (gxqstudio.eth)
-- [ ] Frontend environment variables set
-- [ ] Backend services secured
-- [ ] Database encrypted
-- [ ] SSL certificates configured
-- [ ] DDoS protection enabled
+- [ ] Frontend environment variables set in Vercel
+- [ ] SSL certificates configured (automatic with Vercel)
+- [ ] DDoS protection enabled (Vercel provides this)
 - [ ] Monitoring and alerts active
+- [ ] API routes tested and responding correctly
 
 ## Testing Production
 
