@@ -12,7 +12,12 @@ function Check-Balance {
         [string]$Symbol
     )
 
-    $balanceWei = cast balance $env:PRIVATE_KEY --rpc-url $Rpc
+    # Derive deployer address from private key
+    if (-not $env:DEPLOYER_ADDRESS) {
+        $env:DEPLOYER_ADDRESS = cast wallet address --private-key $env:PRIVATE_KEY
+    }
+    
+    $balanceWei = cast balance $env:DEPLOYER_ADDRESS --rpc-url $Rpc
     $balanceEth = cast from-wei $balanceWei
 
     Write-Host "${Name}: ${balanceEth} ${Symbol}"
