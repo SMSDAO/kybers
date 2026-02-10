@@ -49,7 +49,7 @@ contract Deploy is Script {
         );
 
         // 6. Role assignments
-        admin.grantRole(admin.SUPER_ADMIN_ROLE(), address(treasuryManager));
+        admin.grantRole(admin.TREASURY_ROLE(), address(treasuryManager));
         admin.grantRole(admin.OPERATOR_ROLE(), address(router));
         admin.grantRole(admin.OPERATOR_ROLE(), address(feeManager));
 
