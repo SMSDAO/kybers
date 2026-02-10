@@ -34,18 +34,14 @@ contract Deploy is Script {
 
         // 2. TreasuryManager
         TreasuryManager treasuryManager = new TreasuryManager(
-            treasury,
-            address(admin)
+            treasury
         );
 
         // 3. PriceAggregator
-        PriceAggregator aggregator = new PriceAggregator(priceFeed);
+        PriceAggregator aggregator = new PriceAggregator();
 
         // 4. DynamicFeeManager
-        DynamicFeeManager feeManager = new DynamicFeeManager(
-            address(admin),
-            address(aggregator)
-        );
+        DynamicFeeManager feeManager = new DynamicFeeManager();
 
         // 5. SwapRouter
         SwapRouter router = new SwapRouter(
@@ -55,9 +51,9 @@ contract Deploy is Script {
         );
 
         // 6. Role assignments
-        admin.grantRole(admin.ADMIN_ROLE(), address(treasuryManager));
-        admin.grantRole(admin.ADMIN_ROLE(), address(router));
-        admin.grantRole(admin.ADMIN_ROLE(), address(feeManager));
+        admin.grantRole(admin.OPERATOR_ROLE(), address(treasuryManager));
+        admin.grantRole(admin.OPERATOR_ROLE(), address(router));
+        admin.grantRole(admin.OPERATOR_ROLE(), address(feeManager));
 
         vm.stopBroadcast();
 
