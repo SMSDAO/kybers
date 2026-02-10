@@ -21,13 +21,13 @@ contract TreasuryManagerTest is Test {
     address public owner;
     address public user1;
     address public authorizedCaller;
-    address public constant TREASURY_ADDRESS = 0x6d8c7A3B1e0F8F0F5e3B9F6E8c7A3B1e0F8F0F5e;
+    address public constant TREASURY_ADDRESS = 0x6d8c7A3b1e0F8F0f5e3b9f6e8c7A3B1E0f8F0F5E;
 
     function setUp() public {
         owner = address(this);
         user1 = address(0x1);
         authorizedCaller = address(0x2);
-        treasury = new TreasuryManager(TREASURY_ADDRESS);
+        treasury = new TreasuryManager(payable(TREASURY_ADDRESS));
         token = new MockERC20();
 
         // Authorize caller
