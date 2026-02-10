@@ -23,6 +23,6 @@ export function getNetworkByChainId(chainId: number) {
   return Object.values(NETWORKS).find((n) => n.chainId === chainId) || null;
 }
 
-export function getNetwork(key: string) {
+export function getNetwork(key: keyof typeof NETWORKS) {
   return NETWORKS[key] || null;
 }
