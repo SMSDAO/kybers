@@ -71,10 +71,20 @@ contract TreasuryManagerTest is Test {
         
         uint256 feeAmount = 10 ether;
         token.approve(address(treasury), feeAmount);
+        
+        uint256 treasuryBalanceBefore = token.balanceOf(TREASURY_ADDRESS);
+        
         treasury.collectFee(address(token), feeAmount);
 
-        (uint256 accumulated,,) = treasury.getTokenBalance(address(token));
-        assertEq(accumulated, feeAmount, "Token fee not collected");
+        // Since feeAmount (10 ether) exceeds AUTO_FORWARD_THRESHOLD (1 ether),
+        // fees should be auto-forwarded to treasury address
+        uint256 treasuryBalanceAfter = token.balanceOf(TREASURY_ADDRESS);
+        assertEq(treasuryBalanceAfter - treasuryBalanceBefore, feeAmount, "Token fee not forwarded");
+        
+        // Accumulated should be 0 after auto-forward
+        (uint256 accumulated, uint256 forwarded,) = treasury.getTokenBalance(address(token));
+        assertEq(accumulated, 0, "Accumulated should be 0 after auto-forward");
+        assertEq(forwarded, feeAmount, "Forwarded amount incorrect");
 
         vm.stopPrank();
     }
@@ -114,11 +124,11 @@ contract TreasuryManagerTest is Test {
     }
 
     function testEmergencyWithdraw() public {
-        // Collect fees
-        vm.prank(user1);
+        // Collect fees using authorized caller
+        vm.prank(authorizedCaller);
         treasury.collectFee{value: 1 ether}(address(0), 1 ether);
 
-        // Emergency withdraw
+        // Emergency withdraw as owner
         address recipient = address(0x2);
         treasury.emergencyWithdraw(address(0), 0.5 ether, recipient);
 
