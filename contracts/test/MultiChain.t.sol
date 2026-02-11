@@ -83,11 +83,11 @@ contract MultiChainTest is Test {
     function testFeeConsistencyAcrossChains() public {
         // Test that fees are calculated consistently across chains
         uint256 amount = 1 ether;
-        uint256 liquidityDepth = 1000000 ether;
+        uint256 liquidityDepth = 500000 ether; // Below discount threshold
 
         uint256 fee = feeManager.calculateFee(user, amount, liquidityDepth);
 
-        // Fee should be 0.05% of amount
+        // Fee should be 0.05% of amount (5 basis points)
         uint256 expectedFee = (amount * 5) / 10000;
 
         assertEq(fee, expectedFee, "Fee calculation inconsistent");
@@ -95,6 +95,9 @@ contract MultiChainTest is Test {
 
     function testTreasuryForwardingMultiChain() public {
         // Test that treasury forwarding works on multiple chains
+        // Fund the SwapRouter so it has ETH to send
+        vm.deal(address(swapRouter), 10 ether);
+        
         vm.startPrank(address(swapRouter));
 
         uint256 feeAmount = 0.5 ether;
