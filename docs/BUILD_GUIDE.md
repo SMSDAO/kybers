@@ -54,6 +54,10 @@ cd kybers
    git --version  # Should be >= 2.0
    ```
 
+4. **Optional: Docker** (For containerized deployment)
+   ```bash
+   docker --version
+   docker-compose --version
 4. **Optional: Docker** (For smart contract testing with anvil)
    ```bash
    docker --version
@@ -63,6 +67,13 @@ cd kybers
 
 ```
 kybers/
+├── package.json              # Root package (workspace)
+├── contracts/                # Smart contracts (Foundry)
+├── frontend/                 # Next.js application
+│   └── package.json
+├── app/                      # Classic HTML interface
+│   └── package.json
+├── services/                 # Backend services
 ├── package.json              # Root package configuration
 ├── contracts/                # Smart contracts (Foundry)
 ├── frontend/                 # Next.js application + API routes
@@ -427,6 +438,22 @@ act -j test
 - Use npm/yarn cache
 - Parallelize builds
 - Skip unnecessary rebuilds
+
+## Docker Builds
+
+```bash
+# Build all services
+docker-compose build
+
+# Build specific service
+docker-compose build frontend
+
+# Run services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f frontend
+```
 
 ## Vercel Deployment
 
