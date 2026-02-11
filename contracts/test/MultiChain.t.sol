@@ -83,7 +83,7 @@ contract MultiChainTest is Test {
     function testFeeConsistencyAcrossChains() public {
         // Test that fees are calculated consistently across chains
         uint256 amount = 1 ether;
-        uint256 liquidityDepth = 500000 ether; // Below discount threshold
+        uint256 liquidityDepth = 500000 ether; // Below 1M ETH discount threshold
 
         uint256 fee = feeManager.calculateFee(user, amount, liquidityDepth);
 

@@ -118,11 +118,11 @@ contract TreasuryManagerTest is Test {
         vm.prank(authorizedCaller);
         treasury.collectFee{value: 1 ether}(address(0), 1 ether);
 
-        // Emergency withdraw as owner
-        address recipient = address(0x3);
-        treasury.emergencyWithdraw(address(0), 0.5 ether, recipient);
+        // Emergency withdraw as owner (address changed to avoid conflict with existing addresses)
+        address emergencyRecipient = address(0x3);
+        treasury.emergencyWithdraw(address(0), 0.5 ether, emergencyRecipient);
 
-        assertEq(recipient.balance, 0.5 ether, "Emergency withdraw failed");
+        assertEq(emergencyRecipient.balance, 0.5 ether, "Emergency withdraw failed");
     }
 
     function testBatchForward() public {

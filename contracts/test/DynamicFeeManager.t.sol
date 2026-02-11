@@ -58,8 +58,9 @@ contract DynamicFeeManagerTest is Test {
 
     function testMaxFeeNotExceeded() public {
         // Set adjustments that when added to BASE_FEE still stay under MAX_FEE
-        // BASE_FEE = 5, so max adjustments = 25 (5 + 25 = 30 = MAX_FEE)
-        feeManager.updateFeeConfig(10, 10); // Total: 5 + 10 + 10 = 25
+        // BASE_FEE = 5, max total adjustments = 25, so we use 10 + 10 = 20
+        // Total: 5 + 10 + 10 = 25 <= MAX_FEE (30)
+        feeManager.updateFeeConfig(10, 10);
 
         uint256 amount = 1000 ether;
         uint256 liquidityDepth = 100 ether;
