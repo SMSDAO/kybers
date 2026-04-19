@@ -31,9 +31,7 @@ contract Deploy is Script {
         AdminControl admin = new AdminControl(deployer);
 
         // 2. TreasuryManager
-        TreasuryManager treasuryManager = new TreasuryManager(
-            treasury
-        );
+        TreasuryManager treasuryManager = new TreasuryManager(treasury);
 
         // 3. PriceAggregator
         PriceAggregator aggregator = new PriceAggregator();
@@ -48,11 +46,8 @@ contract Deploy is Script {
             address(aggregator)
         );
 
-        // 6. Authorize SwapRouter to collect fees
-        treasuryManager.setAuthorizedCaller(address(router), true);
-
-        // 7. Role assignments
-        admin.grantRole(admin.OPERATOR_ROLE(), address(treasuryManager));
+        // 6. Role assignments
+        admin.grantRole(admin.TREASURY_ROLE(), address(treasuryManager));
         admin.grantRole(admin.OPERATOR_ROLE(), address(router));
         admin.grantRole(admin.OPERATOR_ROLE(), address(feeManager));
 
