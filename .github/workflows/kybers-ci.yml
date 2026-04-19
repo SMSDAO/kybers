@@ -19,7 +19,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: latest
+          version: nightly
 
       - name: Forge Build
         run: forge build
@@ -40,7 +40,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: latest
+          version: nightly
 
       - name: Show deployer address
         run: cast wallet address $PRIVATE_KEY
