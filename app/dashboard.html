@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Kybers DEX</title>
+    <link rel="stylesheet" href="/app/assets/css/main.css">
+    <link rel="stylesheet" href="/app/assets/css/dashboard.css">
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="header-left">
+            <img src="/app/assets/images/logo.svg" alt="Kybers DEX" class="logo-small">
+            <span class="brand-name">Kybers</span>
+        </div>
+        <div class="header-center">
+            <div class="search-bar">
+                <input type="text" placeholder="Search tokens, pairs, or addresses..." id="searchInput">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="network-selector" id="networkSelector">
+                <span class="network-icon">🌐</span>
+                <span class="network-name" id="networkName">Ethereum</span>
+            </div>
+            <div class="wallet-info" id="walletInfo">
+                <div class="wallet-balance" id="walletBalance">--</div>
+                <div class="wallet-address" id="walletAddress">Connect Wallet</div>
+            </div>
+            <button class="btn-primary" id="connectWalletBtn">Connect</button>
+        </div>
+    </header>
+
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <nav class="sidebar-nav">
+                <a href="/app/dashboard.html" class="nav-item active">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="/app/swap.html" class="nav-item">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-text">Swap</span>
+                </a>
+                <a href="/app/pools.html" class="nav-item">
+                    <span class="nav-icon">💧</span>
+                    <span class="nav-text">Pools</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Analytics</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">🎁</span>
+                    <span class="nav-text">Rewards</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">Settings</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <!-- Portfolio Overview -->
+            <section class="portfolio-overview">
+                <h1>Portfolio Overview</h1>
+                <div class="overview-cards">
+                    <div class="overview-card">
+                        <div class="card-header">
+                            <span class="card-label">Total Balance</span>
+                            <span class="card-change positive">+12.5%</span>
+                        </div>
+                        <div class="card-value" id="totalBalance">$0.00</div>
+                        <div class="card-footer">
+                            <span class="card-subvalue" id="totalBalanceEth">0 ETH</span>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-header">
+                            <span class="card-label">24h Volume</span>
+                            <span class="card-change positive">+8.2%</span>
+                        </div>
+                        <div class="card-value" id="dailyVolume">$0.00</div>
+                        <div class="card-footer">
+                            <span class="card-subvalue">Last updated: Now</span>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-header">
+                            <span class="card-label">Total Trades</span>
+                        </div>
+                        <div class="card-value" id="totalTrades">0</div>
+                        <div class="card-footer">
+                            <span class="card-subvalue">Lifetime</span>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-header">
+                            <span class="card-label">PnL (30d)</span>
+                            <span class="card-change positive" id="pnlChange">+0%</span>
+                        </div>
+                        <div class="card-value" id="pnlValue">$0.00</div>
+                        <div class="card-footer">
+                            <span class="card-subvalue">Monthly</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Portfolio Chart -->
+            <section class="portfolio-chart">
+                <div class="chart-header">
+                    <h2>Portfolio Value</h2>
+                    <div class="chart-timeframe">
+                        <button class="timeframe-btn active" data-timeframe="24h">24H</button>
+                        <button class="timeframe-btn" data-timeframe="7d">7D</button>
+                        <button class="timeframe-btn" data-timeframe="30d">30D</button>
+                        <button class="timeframe-btn" data-timeframe="1y">1Y</button>
+                        <button class="timeframe-btn" data-timeframe="all">ALL</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="portfolioChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Assets Table -->
+            <section class="assets-section">
+                <div class="section-header">
+                    <h2>Your Assets</h2>
+                    <button class="btn-secondary" id="refreshAssets">Refresh</button>
+                </div>
+                <div class="assets-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Balance</th>
+                                <th>Value (USD)</th>
+                                <th>Price</th>
+                                <th>24h Change</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assetsTableBody">
+                            <tr class="empty-state">
+                                <td colspan="6">
+                                    <div class="empty-message">
+                                        <p>Connect your wallet to view assets</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Recent Transactions -->
+            <section class="transactions-section">
+                <div class="section-header">
+                    <h2>Recent Transactions</h2>
+                    <a href="#" class="view-all">View All</a>
+                </div>
+                <div class="transactions-list" id="transactionsList">
+                    <div class="empty-state">
+                        <p>No recent transactions</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="dashboard-right-sidebar">
+            <!-- Market Stats -->
+            <section class="market-stats">
+                <h3>Market Overview</h3>
+                <div class="stat-item">
+                    <span class="stat-label">ETH Price</span>
+                    <span class="stat-value" id="ethPrice">$0.00</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Gas Price</span>
+                    <span class="stat-value" id="gasPrice">0 gwei</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">TVL</span>
+                    <span class="stat-value" id="tvlValue">$0M</span>
+                </div>
+            </section>
+
+            <!-- Trending Pairs -->
+            <section class="trending-pairs">
+                <h3>Trending Pairs</h3>
+                <div class="pairs-list" id="trendingPairs">
+                    <div class="pair-item">
+                        <div class="pair-info">
+                            <span class="pair-name">ETH/USDT</span>
+                            <span class="pair-price">$2,500.00</span>
+                        </div>
+                        <span class="pair-change positive">+5.2%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Actions -->
+            <section class="quick-actions">
+                <h3>Quick Actions</h3>
+                <button class="action-btn">
+                    <span class="action-icon">🔄</span>
+                    <span>Swap Tokens</span>
+                </button>
+                <button class="action-btn">
+                    <span class="action-icon">💧</span>
+                    <span>Add Liquidity</span>
+                </button>
+                <button class="action-btn">
+                    <span class="action-icon">📊</span>
+                    <span>View Analytics</span>
+                </button>
+            </section>
+        </aside>
+    </div>
+
+    <script src="/app/assets/js/web3-integration.js"></script>
+    <script src="/app/assets/js/dashboard.js"></script>
+</body>
+</html>
