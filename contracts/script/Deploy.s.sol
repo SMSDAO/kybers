@@ -14,14 +14,12 @@ contract Deploy is Script {
     // Environment variables
     address payable deployer;
     address payable treasury;
-    address priceFeed;
     address weth;
     address usdc;
 
     function setUp() public {
         deployer = payable(vm.envAddress("DEPLOYER"));
         treasury = payable(vm.envAddress("TREASURY"));
-        priceFeed = vm.envAddress("PRICE_FEED");
         weth = vm.envAddress("WETH");
         usdc = vm.envAddress("USDC");
     }
@@ -49,7 +47,7 @@ contract Deploy is Script {
         );
 
         // 6. Role assignments
-        admin.grantRole(admin.OPERATOR_ROLE(), address(treasuryManager));
+        admin.grantRole(admin.TREASURY_ROLE(), address(treasuryManager));
         admin.grantRole(admin.OPERATOR_ROLE(), address(router));
         admin.grantRole(admin.OPERATOR_ROLE(), address(feeManager));
 

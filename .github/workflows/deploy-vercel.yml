@@ -1,6 +1,11 @@
+name: Deploy Frontend to Vercel (Manual)
+
+on:
+  workflow_dispatch:
+
+jobs:
   deploy-vercel:
     name: Deploy Frontend to Vercel
-    needs: build-and-test
     runs-on: ubuntu-latest
 
     steps:
@@ -23,3 +28,6 @@
       - name: Deploy to Vercel
         run: npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
         working-directory: frontend
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

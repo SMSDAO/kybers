@@ -94,18 +94,17 @@ pnpm-lock.yaml
 
 **Issue**: Some packages referenced TypeScript compilation (`tsc`) and testing frameworks (`jest`) that weren't configured.
 
-**Fix**: Updated scripts to use placeholder commands that won't fail.
+**Fix**: Updated scripts to use placeholder commands that won't fail. After Next.js API consolidation, the services directory was removed.
 
 **Files Updated**:
 - `frontend/package.json` - Added test placeholder
-- `services/package.json` - Updated build and test scripts
 
 **Changes**:
 ```json
 {
   "scripts": {
     "test": "echo \"No tests configured yet\"",
-    "build": "echo \"Build complete\""
+    "build": "next build"
   }
 }
 ```

@@ -54,6 +54,7 @@ contract CrossChainRouter is Ownable, ReentrancyGuard {
     );
     event CrossChainSwapCompleted(bytes32 indexed swapId, uint256 amountOut);
     event CrossChainSwapFailed(bytes32 indexed swapId, string reason);
+   event ChainUpdated( uint256 indexed chainId, address router, address bridge, bool enabled, uint256 minAmount, uint256 maxAmount);
 
     constructor() Ownable(msg.sender) {
         // Initialize with common chains
@@ -204,6 +205,7 @@ contract CrossChainRouter is Ownable, ReentrancyGuard {
         config.enabled = enabled;
         config.minAmount = minAmount;
         config.maxAmount = maxAmount;
+        emit ChainUpdated(chainId, router, bridge, enabled, minAmount, maxAmount);
     }
 
     /**
