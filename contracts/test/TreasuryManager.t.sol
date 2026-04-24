@@ -126,13 +126,14 @@ contract TreasuryManagerTest is Test {
     function testEmergencyWithdraw() public {
         // Collect fees using authorized caller
         vm.prank(authorizedCaller);
-        treasury.collectFee{value: 1 ether}(address(0), 1 ether);
+        treasury.collectFee{value: 0.5 ether}(address(0), 0.5 ether);
 
         // Emergency withdraw as owner
-        address recipient = address(0x2);
+        address recipient = address(0x1234);
+        uint256 recipientBalanceBefore = recipient.balance;
         treasury.emergencyWithdraw(address(0), 0.5 ether, recipient);
 
-        assertEq(recipient.balance, 0.5 ether, "Emergency withdraw failed");
+        assertEq(recipient.balance - recipientBalanceBefore, 0.5 ether, "Emergency withdraw failed");
     }
 
     function testBatchForward() public {
