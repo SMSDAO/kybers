@@ -222,7 +222,10 @@ cmd_test() {
             print_warning "Tests failed, attempting recovery..."
             forge clean
             forge build
-            forge test -vvv || print_error "Contract tests failed after retry"
+            if ! forge test -vvv; then
+                print_error "Contract tests failed after retry"
+                exit 1
+            fi
         fi
         print_success "Contract tests passed"
     else

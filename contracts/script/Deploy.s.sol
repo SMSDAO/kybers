@@ -25,7 +25,7 @@ contract Deploy is Script {
     }
 
     function run() public {
-        vm.startBroadcast(deployer);
+        vm.startBroadcast();
 
         // 1. AdminControl
         AdminControl admin = new AdminControl(deployer);
@@ -53,7 +53,7 @@ contract Deploy is Script {
 
         vm.stopBroadcast();
 
-        // 8. Emit addresses for verify-deployment.sh
+        // 7. Emit addresses for verify-deployment.sh
         console2.log("ADMIN_CONTROL", address(admin));
         console2.log("TREASURY_MANAGER", address(treasuryManager));
         console2.log("PRICE_AGGREGATOR", address(aggregator));

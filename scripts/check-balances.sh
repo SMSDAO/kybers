@@ -1,15 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
+# Determine deployer address without exposing the private key
+if [ -z "$DEPLOYER_ADDRESS" ]; then
+    DEPLOYER_ADDRESS=$(cast wallet address --private-key "$PRIVATE_KEY")
+fi
+
 echo "Checking balances for deployer wallet..."
-echo "Wallet: $PRIVATE_KEY"
+echo "Wallet address: $DEPLOYER_ADDRESS"
 
 check () {
     local NAME=$1
     local RPC=$2
     local SYMBOL=$3
 
-    BAL=$(cast balance $PRIVATE_KEY --rpc-url $RPC)
+    BAL=$(cast balance "$DEPLOYER_ADDRESS" --rpc-url $RPC)
     ETH=$(cast from-wei $BAL)
 
     echo "$NAME: $ETH $SYMBOL"

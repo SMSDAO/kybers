@@ -5,8 +5,14 @@ check_balance () {
     local RPC=$1
     local MIN_BALANCE_WEI=10000000000000000   # 0.01 ETH
 
-    BALANCE=$(cast balance $PRIVATE_KEY --rpc-url $RPC)
+    # Derive deployer address from private key
+    if [ -z "$DEPLOYER_ADDRESS" ]; then
+        DEPLOYER_ADDRESS=$(cast wallet address --private-key "$PRIVATE_KEY")
+    fi
 
+    BALANCE=$(cast balance "$DEPLOYER_ADDRESS" --rpc-url $RPC)
+
+    echo "Wallet address: $DEPLOYER_ADDRESS"
     echo "Wallet balance: $BALANCE wei"
 
     if [ "$BALANCE" -lt "$MIN_BALANCE_WEI" ]; then
@@ -45,18 +51,22 @@ echo "Deploying to Base..."
 OUTPUT=$(forge script script/Deploy.s.sol:Deploy \
   --rpc-url $RPC_BASE \
   --private-key $PRIVATE_KEY \
-  --broadcast \
-  --json)
+  --broadcast 2>&1)
 
-ROUTER=$(echo $OUTPUT | jq -r '.returns.router')
-FACTORY=$(echo $OUTPUT | jq -r '.returns.factory')
-TOKEN=$(echo $OUTPUT | jq -r '.returns.token')
+# Extract addresses from console2.log output
+ADMIN=$(echo "$OUTPUT" | grep "ADMIN_CONTROL" | awk '{print $2}')
+TREASURY_MANAGER=$(echo "$OUTPUT" | grep "TREASURY_MANAGER" | awk '{print $2}')
+AGGREGATOR=$(echo "$OUTPUT" | grep "PRICE_AGGREGATOR" | awk '{print $2}')
+FEE_MANAGER=$(echo "$OUTPUT" | grep "FEE_MANAGER" | awk '{print $2}')
+ROUTER=$(echo "$OUTPUT" | grep "SWAP_ROUTER" | awk '{print $2}')
 
 cat <<EOF > deployments/base-$NETWORK.json
 {
-  "router": "$ROUTER",
-  "factory": "$FACTORY",
-  "token": "$TOKEN"
+  "admin": "$ADMIN",
+  "treasuryManager": "$TREASURY_MANAGER",
+  "priceAggregator": "$AGGREGATOR",
+  "feeManager": "$FEE_MANAGER",
+  "router": "$ROUTER"
 }
 EOF
 
@@ -72,18 +82,22 @@ echo "Deploying to Zora..."
 OUTPUT=$(forge script script/Deploy.s.sol:Deploy \
   --rpc-url $RPC_ZORA \
   --private-key $PRIVATE_KEY \
-  --broadcast \
-  --json)
+  --broadcast 2>&1)
 
-ROUTER=$(echo $OUTPUT | jq -r '.returns.router')
-FACTORY=$(echo $OUTPUT | jq -r '.returns.factory')
-TOKEN=$(echo $OUTPUT | jq -r '.returns.token')
+# Extract addresses from console2.log output
+ADMIN=$(echo "$OUTPUT" | grep "ADMIN_CONTROL" | awk '{print $2}')
+TREASURY_MANAGER=$(echo "$OUTPUT" | grep "TREASURY_MANAGER" | awk '{print $2}')
+AGGREGATOR=$(echo "$OUTPUT" | grep "PRICE_AGGREGATOR" | awk '{print $2}')
+FEE_MANAGER=$(echo "$OUTPUT" | grep "FEE_MANAGER" | awk '{print $2}')
+ROUTER=$(echo "$OUTPUT" | grep "SWAP_ROUTER" | awk '{print $2}')
 
 cat <<EOF > deployments/zora-$NETWORK.json
 {
-  "router": "$ROUTER",
-  "factory": "$FACTORY",
-  "token": "$TOKEN"
+  "admin": "$ADMIN",
+  "treasuryManager": "$TREASURY_MANAGER",
+  "priceAggregator": "$AGGREGATOR",
+  "feeManager": "$FEE_MANAGER",
+  "router": "$ROUTER"
 }
 EOF
 
@@ -99,18 +113,22 @@ echo "Deploying to Polygon..."
 OUTPUT=$(forge script script/Deploy.s.sol:Deploy \
   --rpc-url $RPC_POLYGON \
   --private-key $PRIVATE_KEY \
-  --broadcast \
-  --json)
+  --broadcast 2>&1)
 
-ROUTER=$(echo $OUTPUT | jq -r '.returns.router')
-FACTORY=$(echo $OUTPUT | jq -r '.returns.factory')
-TOKEN=$(echo $OUTPUT | jq -r '.returns.token')
+# Extract addresses from console2.log output
+ADMIN=$(echo "$OUTPUT" | grep "ADMIN_CONTROL" | awk '{print $2}')
+TREASURY_MANAGER=$(echo "$OUTPUT" | grep "TREASURY_MANAGER" | awk '{print $2}')
+AGGREGATOR=$(echo "$OUTPUT" | grep "PRICE_AGGREGATOR" | awk '{print $2}')
+FEE_MANAGER=$(echo "$OUTPUT" | grep "FEE_MANAGER" | awk '{print $2}')
+ROUTER=$(echo "$OUTPUT" | grep "SWAP_ROUTER" | awk '{print $2}')
 
 cat <<EOF > deployments/polygon-$NETWORK.json
 {
-  "router": "$ROUTER",
-  "factory": "$FACTORY",
-  "token": "$TOKEN"
+  "admin": "$ADMIN",
+  "treasuryManager": "$TREASURY_MANAGER",
+  "priceAggregator": "$AGGREGATOR",
+  "feeManager": "$FEE_MANAGER",
+  "router": "$ROUTER"
 }
 EOF
 
