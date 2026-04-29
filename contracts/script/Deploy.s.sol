@@ -12,20 +12,28 @@ import "../core/PriceAggregator.sol";
 
 contract Deploy is Script {
     // Environment variables
+    uint256 deployerPrivateKey;
     address payable deployer;
     address payable treasury;
     address weth;
     address usdc;
 
     function setUp() public {
-        deployer = payable(vm.envAddress("DEPLOYER"));
+        deployerPrivateKey = vm.envOr("PRIVATE_KEY", uint256(0));
+        deployer = deployerPrivateKey != 0
+            ? payable(vm.addr(deployerPrivateKey))
+            : payable(vm.envAddress("DEPLOYER"));
         treasury = payable(vm.envAddress("TREASURY"));
         weth = vm.envAddress("WETH");
         usdc = vm.envAddress("USDC");
     }
 
     function run() public {
-        vm.startBroadcast();
+        if (deployerPrivateKey != 0) {
+            vm.startBroadcast(deployerPrivateKey);
+        } else {
+            vm.startBroadcast();
+        }
 
         // 1. AdminControl
         AdminControl admin = new AdminControl(deployer);

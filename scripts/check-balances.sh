@@ -14,8 +14,8 @@ check () {
     local RPC=$2
     local SYMBOL=$3
 
-    BAL=$(cast balance "$DEPLOYER_ADDRESS" --rpc-url $RPC)
-    ETH=$(cast from-wei $BAL)
+    BAL=$(cast balance "$DEPLOYER_ADDRESS" --rpc-url "$RPC")
+    ETH=$(cast from-wei "$BAL")
 
     echo "$NAME: $ETH $SYMBOL"
 }
