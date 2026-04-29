@@ -69,7 +69,7 @@ contract TreasuryManagerTest is Test {
     function testCollectERC20Fee() public {
         vm.startPrank(authorizedCaller);
         
-        uint256 feeAmount = 0.5 ether; // Below auto-forward threshold
+        uint256 feeAmount = 10 ether; // Above auto-forward threshold
         token.approve(address(treasury), feeAmount);
         
         uint256 treasuryBalanceBefore = token.balanceOf(TREASURY_ADDRESS);
@@ -126,13 +126,14 @@ contract TreasuryManagerTest is Test {
     function testEmergencyWithdraw() public {
         // Collect fees using authorized caller
         vm.prank(authorizedCaller);
-        treasury.collectFee{value: 1 ether}(address(0), 1 ether);
+        treasury.collectFee{value: 0.5 ether}(address(0), 0.5 ether);
 
         // Emergency withdraw as owner
-        address recipient = address(0x2);
+        address recipient = address(0x1234);
+        uint256 recipientBalanceBefore = recipient.balance;
         treasury.emergencyWithdraw(address(0), 0.5 ether, recipient);
 
-        assertEq(emergencyRecipient.balance, 0.5 ether, "Emergency withdraw failed");
+        assertEq(recipient.balance - recipientBalanceBefore, 0.5 ether, "Emergency withdraw failed");
     }
 
     function testBatchForward() public {

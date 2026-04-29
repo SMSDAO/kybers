@@ -12,20 +12,28 @@ import "../core/PriceAggregator.sol";
 
 contract Deploy is Script {
     // Environment variables
+    uint256 deployerPrivateKey;
     address payable deployer;
     address payable treasury;
     address weth;
     address usdc;
 
     function setUp() public {
-        deployer = payable(vm.envAddress("DEPLOYER"));
+        deployerPrivateKey = vm.envOr("PRIVATE_KEY", uint256(0));
+        deployer = deployerPrivateKey != 0
+            ? payable(vm.addr(deployerPrivateKey))
+            : payable(vm.envAddress("DEPLOYER"));
         treasury = payable(vm.envAddress("TREASURY"));
         weth = vm.envAddress("WETH");
         usdc = vm.envAddress("USDC");
     }
 
     function run() public {
-        vm.startBroadcast(deployer);
+        if (deployerPrivateKey != 0) {
+            vm.startBroadcast(deployerPrivateKey);
+        } else {
+            vm.startBroadcast();
+        }
 
         // 1. AdminControl
         AdminControl admin = new AdminControl(deployer);
@@ -53,7 +61,7 @@ contract Deploy is Script {
 
         vm.stopBroadcast();
 
-        // 8. Emit addresses for verify-deployment.sh
+        // 7. Emit addresses for verify-deployment.sh
         console2.log("ADMIN_CONTROL", address(admin));
         console2.log("TREASURY_MANAGER", address(treasuryManager));
         console2.log("PRICE_AGGREGATOR", address(aggregator));

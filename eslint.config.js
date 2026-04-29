@@ -1,10 +1,9 @@
-// eslint.config.js
-import js from "@eslint/js";
-import tseslint from "typescript-eslint";
-import react from "eslint-plugin-react";
-import jsxA11y from "eslint-plugin-jsx-a11y";
+const js = require("@eslint/js");
+const tseslint = require("typescript-eslint");
+const react = require("eslint-plugin-react");
+const jsxA11y = require("eslint-plugin-jsx-a11y");
 
-export default [
+module.exports = [
   // Base recommended rules
   js.configs.recommended,
 
